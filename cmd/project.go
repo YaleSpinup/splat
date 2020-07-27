@@ -43,6 +43,8 @@ func (p *Project) walkHandler(path string, info os.FileInfo, err error) error {
 		return err
 	}
 
+	log.Debugf("path is %s, teplate path is %s", path, p.TemplatePath)
+
 	log.Infof("looking at file %s: dir: %t", path, info.IsDir())
 
 	if path == p.TemplatePath {

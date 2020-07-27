@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -45,11 +46,14 @@ var (
 			} else {
 				// git clone
 				// templatePath = clonedDir
+				return fmt.Errorf("git repositories are currently unsupported")
 			}
 
 			if templatePath == "" {
 				return fmt.Errorf("templatePath cannot be empty, set a git repo or local template directory")
 			}
+
+			templatePath = filepath.Clean(templatePath)
 
 			projectPath, err := initializeProject(args[0], templatePath)
 			if err != nil {
@@ -64,7 +68,7 @@ var (
 )
 
 func init() {
-	initCmd.Flags().StringVarP(&gitRepository, "git", "g", "https://github.com/YaleSpinup/test-api", "tempalte repository")
+	initCmd.Flags().StringVarP(&gitRepository, "git", "g", "https://github.com/YaleSpinup/api-tmpl", "template repository")
 	initCmd.Flags().StringVarP(&localPath, "local", "l", "", "path to a local template")
 	initCmd.Flags().StringVarP(&urlBase, "url", "u", "/v1/test", "base path for url routes")
 }
