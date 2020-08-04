@@ -15,9 +15,16 @@ jobs:
         goarch: [amd64]
     steps:
     - uses: actions/checkout@v2
+
+    - name: Set APP_VERSION env
+      run: echo ::set-env name=APP_VERSION::$(echo ${GITHUB_REF} | rev | cut -d'/' -f 1 | rev )
+    - name: Set BUILD_TIME env
+      run: echo ::set-env name=BUILD_TIME::$(date)
+
     - uses: wangyoucao577/go-release-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goos: ${{ matrix.goos }}
         goarch: ${{ matrix.goarch }}
         binary_name: "splat"
+        ldflags: -X "main.appVersion=${{ env.APP_VERSION }}" -X "main.buildTime=${{ env.BUILD_TIME }}" -X main.gitCommit=${{ github.sha }} -X main.gitRef=${{ github.ref }}
