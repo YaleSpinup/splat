@@ -88,7 +88,7 @@ func (p *Project) walkHandler(path string, info os.FileInfo, err error) error {
 		parsedTemplate.Flush()
 
 		log.Debugf("writing output to %s", newfile)
-		if err := ioutil.WriteFile(newfile, b.Bytes(), 0444); err != nil {
+		if err := ioutil.WriteFile(newfile, b.Bytes(), 0644); err != nil {
 			return err
 		}
 

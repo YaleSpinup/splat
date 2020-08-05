@@ -26,12 +26,13 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
-
-var rootCmd = &cobra.Command{
-	Use:   "splat",
-	Short: "Splat creates new go APIs",
-}
+var (
+	cfgFile string
+	rootCmd = &cobra.Command{
+		Use:   "splat",
+		Short: "Splat creates new go APIs",
+	}
+)
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
@@ -44,6 +45,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.splat.yaml)")
 	rootCmd.AddCommand(initCmd)
+	rootCmd.AddCommand(versionCmd)
 }
 
 func initConfig() {
