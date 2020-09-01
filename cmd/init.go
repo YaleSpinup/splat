@@ -64,7 +64,7 @@ var (
 
 				templatePath, err = downloadGithubRelease(tempDir)
 				if err != nil {
-					return fmt.Errorf("failed to determine download URL for '%s:%s': %s", githubRepository, githubReleaseTag, err)
+					return fmt.Errorf("failed to download template for '%s:%s': %s", githubRepository, githubReleaseTag, err)
 				}
 			}
 
