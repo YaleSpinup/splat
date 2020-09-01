@@ -24,6 +24,8 @@ import (
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
+
+	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -42,6 +44,8 @@ func Execute() {
 }
 
 func init() {
+	log.SetLevel(log.DebugLevel)
+
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.splat.yaml)")
 	rootCmd.AddCommand(initCmd)
