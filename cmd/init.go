@@ -17,18 +17,25 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"archive/zip"
+	"context"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
 	"time"
 
+	"github.com/google/go-github/v32/github"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
 var (
-	gitRepository, localPath, urlBase string
+	githubRepository, githubReleaseTag, localPath, urlBase string
 
 	initCmd = &cobra.Command{
 		Use:     "init [package name]",
@@ -44,9 +51,21 @@ var (
 			if localPath != "" {
 				templatePath = localPath
 			} else {
-				// git clone
-				// templatePath = clonedDir
-				return fmt.Errorf("git repositories are currently unsupported")
+				tempDir, err := ioutil.TempDir("", "splat")
+				if err != nil {
+					return fmt.Errorf("failed to create temporary directory: %s", err)
+				}
+
+				defer func() {
+					if err := os.RemoveAll(tempDir); err != nil {
+						fmt.Printf("failed to cleanup after myself... there might be temporary files left in %s", tempDir)
+					}
+				}()
+
+				templatePath, err = downloadGithubRelease(tempDir)
+				if err != nil {
+					return fmt.Errorf("failed to determine download URL for '%s:%s': %s", githubRepository, githubReleaseTag, err)
+				}
 			}
 
 			if templatePath == "" {
@@ -68,7 +87,8 @@ var (
 )
 
 func init() {
-	initCmd.Flags().StringVarP(&gitRepository, "git", "g", "https://github.com/YaleSpinup/api-tmpl", "template repository")
+	initCmd.Flags().StringVarP(&githubRepository, "github", "g", "YaleSpinup/api-tmpl", "Pull template from a Github repository")
+	initCmd.Flags().StringVarP(&githubReleaseTag, "tag", "t", "", "Use this release tag instead of latest when pulling from Github")
 	initCmd.Flags().StringVarP(&localPath, "local", "l", "", "path to a local template")
 	initCmd.Flags().StringVarP(&urlBase, "url", "u", "/v1/test", "base path for url routes")
 }
@@ -103,4 +123,115 @@ func copyrightLine() string {
 
 func dockerName(name string) string {
 	return strings.Trim(strings.ToLower(strings.TrimSpace(name)), "-_")
+}
+
+func downloadGithubRelease(path string) (string, error) {
+	client := github.NewClient(nil)
+
+	splitRep := strings.Split(githubRepository, "/")
+	if len(splitRep) < 2 {
+		return "", fmt.Errorf("badly formated repository '%s'", githubRepository)
+	}
+
+	owner := splitRep[len(splitRep)-2]
+	repo := splitRep[len(splitRep)-1]
+
+	var url string
+	if githubReleaseTag != "" {
+		release, _, err := client.Repositories.GetReleaseByTag(context.TODO(), owner, repo, githubReleaseTag)
+		if err != nil {
+			return "", err
+		}
+		url = *release.ZipballURL
+	} else {
+		release, _, err := client.Repositories.GetLatestRelease(context.TODO(), owner, repo)
+		if err != nil {
+			return "", err
+		}
+		url = *release.ZipballURL
+	}
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", fmt.Errorf("failed to start download of template: %s", err)
+	}
+	defer resp.Body.Close()
+
+	outPath := fmt.Sprintf("%s/template.zip", path)
+	outFile, err := os.Create(outPath)
+	if err != nil {
+		return "", fmt.Errorf("failed to create temporary download file %s: %s", outPath, err)
+	}
+	defer outFile.Close()
+
+	cb, err := io.Copy(outFile, resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("failed to write to temporary download file %s: %s", outPath, err)
+	}
+
+	log.Debugf("downloaded %d bytes to %s", cb, outPath)
+
+	extractDir := fmt.Sprintf("%s/template", path)
+	if err := unzip(outPath, extractDir); err != nil {
+		return "", fmt.Errorf("failed to extract archive %s: %s", outPath, err)
+	}
+
+	return extractDir, nil
+}
+
+// unzip unzips a zip, modified from: https://golangcode.com/unzip-files-in-go/
+func unzip(src, dest string) error {
+	r, err := zip.OpenReader(src)
+	if err != nil {
+		return err
+	}
+	defer r.Close()
+
+	topdir := ""
+	for _, f := range r.File {
+		fname := strings.TrimPrefix(f.Name, topdir)
+		fpath := filepath.Join(dest, fname)
+
+		// Check for ZipSlip. More Info: http://bit.ly/2MsjAWE
+		if !strings.HasPrefix(fpath, filepath.Clean(dest)+string(os.PathSeparator)) {
+			return fmt.Errorf("%s: illegal file path", fpath)
+		}
+
+		if f.FileInfo().IsDir() {
+			// create directories unllesss it's the toplevel directory that looks like organization-reponame-commit
+			if topdir != "" {
+				os.MkdirAll(fpath, os.ModePerm)
+			} else {
+				topdir = f.Name
+			}
+			continue
+		}
+
+		// Make File
+		if err = os.MkdirAll(filepath.Dir(fpath), os.ModePerm); err != nil {
+			return err
+		}
+
+		outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+		if err != nil {
+			return err
+		}
+
+		rc, err := f.Open()
+		if err != nil {
+			return err
+		}
+
+		_, err = io.Copy(outFile, rc)
+
+		// Close the file without defer to close before next iteration of loop
+		outFile.Close()
+		rc.Close()
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

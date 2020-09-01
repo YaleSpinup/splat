@@ -24,8 +24,6 @@ type Project struct {
 }
 
 func (p *Project) Create() error {
-	log.SetLevel(log.DebugLevel)
-
 	// check if AbsolutePath exists
 	if _, err := os.Stat(p.AbsolutePath); os.IsNotExist(err) {
 		// create directory
