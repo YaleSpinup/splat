@@ -20,6 +20,12 @@ Initialize a new API from a repository in Github.  `Splat` works off of releases
 
  `splat init -g 'YaleSpinup/api-tmpl' --tag v0.2.0 github.com/YaleSpinup/new-api`
 
+### Change the output directory
+
+ You can specify the release tag with the `--tag` flag.
+
+ `splat init -g 'YaleSpinup/api-tmpl' -o some/path/new-api github.com/YaleSpinup/new-api`
+
 ## Author
 
 E Camden Fisher <camden.fisher@yale.edu>
@@ -27,4 +33,4 @@ E Camden Fisher <camden.fisher@yale.edu>
 ## License
 
 GNU Affero General Public License v3.0 (GNU AGPLv3)
-Copyright (c) 202 Yale University
+Copyright (c) 2021 Yale University
