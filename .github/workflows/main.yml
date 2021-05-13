@@ -23,8 +23,8 @@ jobs:
       run: |
         echo "BUILD_TIME=$(date)" >> $GITHUB_ENV
 
-    - name: run the build
     - uses: wangyoucao577/go-release-action@master
+      name: run the build
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goos: ${{ matrix.goos }}
