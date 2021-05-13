@@ -35,7 +35,7 @@ import (
 )
 
 var (
-	githubRepository, githubReleaseTag, localPath, urlBase string
+	githubRepository, githubReleaseTag, localPath, urlBase, outDir string
 
 	initCmd = &cobra.Command{
 		Use:     "init [package name]",
@@ -91,17 +91,28 @@ func init() {
 	initCmd.Flags().StringVarP(&githubReleaseTag, "tag", "t", "", "Use this release tag instead of latest when pulling from Github")
 	initCmd.Flags().StringVarP(&localPath, "local", "l", "", "path to a local template")
 	initCmd.Flags().StringVarP(&urlBase, "url", "u", "/v1/test", "base path for url routes")
+	initCmd.Flags().StringVarP(&outDir, "out", "o", "", "path to write output")
 }
 
 func initializeProject(pkgName, templatePath string) (string, error) {
+	appName := path.Base(pkgName)
+
 	wd, err := os.Getwd()
 	if err != nil {
 		return "", err
 	}
 
-	appName := path.Base(pkgName)
+	absPath := wd + "/" + appName
+	if outDir != "" {
+		if filepath.IsAbs(outDir) {
+			absPath = outDir
+		} else {
+			absPath = filepath.Clean(wd + "/" + outDir)
+		}
+	}
+
 	project := &Project{
-		AbsolutePath: wd + "/" + appName,
+		AbsolutePath: absPath,
 		AppName:      appName,
 		Copyright:    copyrightLine(),
 		DockerName:   dockerName(appName),
