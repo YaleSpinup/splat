@@ -18,10 +18,11 @@ changelog:
       - '^test:'
 brews:
   -
-    name: 'splat'
-    tap:
-      owner: 'yalespinup'
-      name: 'homebrew-tools'
+    name: splat
+    github:
+      owner: yalespinup
+      name: homebrew-tools
     install: |
       bin.install "splat"
-    license: "AGPL"
+    license: AGPL
+    folder: Formula
