@@ -16,3 +16,12 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
+brews:
+  -
+    name: 'splat'
+    tap:
+      owner: 'yalespinup'
+      name: 'homebrew-tools'
+    install: |
+      bin.install "splat"
+    license: "AGPL"
