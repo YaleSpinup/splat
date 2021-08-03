@@ -39,7 +39,7 @@ var (
 		Short:   "Display splat version information",
 		RunE: func(_ *cobra.Command, args []string) error {
 			if long {
-				fmt.Printf("Splat version: %s\nBuildtime: %s\nGitCommit: %s\nGitRef: %s\n", Version.AppVersion, Version.BuildTime, Version.GitCommit, Version.GitRef)
+				fmt.Printf("Splat version: %s\nBuildtime: %s\nGitCommit: %s\n", Version.AppVersion, Version.BuildTime, Version.GitCommit)
 				return nil
 			}
 

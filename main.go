@@ -19,18 +19,16 @@ package main
 import "github.com/YaleSpinup/splat/cmd"
 
 var (
-	appVersion = "v0.0.0"
-	buildTime  = "unset"
-	gitCommit  = "unset"
-	gitRef     = "unset"
+	version = "v0.0.0"
+	date    = "unset"
+	commit  = "unset"
 )
 
 func main() {
 	cmd.Version = &cmd.CmdVersion{
-		AppVersion: appVersion,
-		BuildTime:  buildTime,
-		GitCommit:  gitCommit,
-		GitRef:     gitRef,
+		AppVersion: version,
+		BuildTime:  date,
+		GitCommit:  commit,
 	}
 
 	cmd.Execute()
