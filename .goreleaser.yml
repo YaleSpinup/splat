@@ -19,9 +19,10 @@ changelog:
 brews:
   -
     name: splat
-    github:
+    tap:
       owner: yalespinup
       name: homebrew-tools
+      token: "{{ .Env.GITHUB_TOKEN }}"
     install: |
       bin.install "splat"
     license: AGPL
