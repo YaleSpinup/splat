@@ -23,6 +23,7 @@ brews:
   -
     name: splat
     description: Bootstrap new Spinup APIs
+    homepage: https://github.com/YaleSpinup/splat
     tap:
       owner: yalespinup
       name: homebrew-tools
