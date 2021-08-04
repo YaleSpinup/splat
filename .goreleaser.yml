@@ -29,7 +29,7 @@ brews:
       name: homebrew-tools
     install: |
       bin.install "splat"
-    license: AGPLv3
+    license: AGPL-3.0-or-later
     folder: Formula
     test: |
-      system "#{bin}/splat version"
+      system "#{bin}/splat", "version"
