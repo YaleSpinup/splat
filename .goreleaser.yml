@@ -10,6 +10,7 @@ builds:
       - darwin
 release:
   prerelease: auto
+  name_template: "{{.ProjectName}}-v{{.Version}}"
 checksum:
   name_template: 'checksums.txt'
 changelog:
@@ -21,10 +22,13 @@ changelog:
 brews:
   -
     name: splat
+    description: Bootstrap new Spinup APIs
     tap:
       owner: yalespinup
       name: homebrew-tools
     install: |
       bin.install "splat"
-    license: AGPL
+    license: AGPLv3
     folder: Formula
+    test: |
+      system "#{bin}/splat version"
