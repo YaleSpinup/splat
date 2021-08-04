@@ -2,10 +2,27 @@
 
 Lays out the structure for a new Spinup API.
 
+## Install
+
+## Install Using Homebrew
+
+```bash
+brew install yalespinup/tools/splat
+```
+
+## Install from Binary
+
+Download the latest binary for your platform from [our releasse](https://github.com/YaleSpinup/splat/releases) and place it in your PATH.
+
+## Install in GOPATH/bin from source
+
+```bash
+git clone https://github.com/YaleSpinup/splat.git
+cd splat
+go install
+```
+
 ## Usage
-
-Download the latest binary for your platform.
-
 ### Initialize from a local template
 
 `splat init -l template-directory github.com/YaleSpinup/new-api`
