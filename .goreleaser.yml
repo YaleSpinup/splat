@@ -22,7 +22,6 @@ brews:
     tap:
       owner: yalespinup
       name: homebrew-tools
-      token: "{{ .Env.HOMEBREW_GITHUB_TOKEN }}"
     install: |
       bin.install "splat"
     license: AGPL
