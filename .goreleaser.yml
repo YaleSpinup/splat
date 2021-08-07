@@ -1,0 +1,35 @@
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+release:
+  prerelease: auto
+  name_template: "{{.ProjectName}}-v{{.Version}}"
+checksum:
+  name_template: 'checksums.txt'
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+brews:
+  -
+    name: splat
+    description: Bootstrap new Spinup APIs
+    homepage: https://github.com/YaleSpinup/splat
+    tap:
+      owner: yalespinup
+      name: homebrew-tools
+    install: |
+      bin.install "splat"
+    license: AGPL-3.0-or-later
+    folder: Formula
+    test: |
+      system "#{bin}/splat", "version"
