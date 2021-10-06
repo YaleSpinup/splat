@@ -50,8 +50,11 @@ func (p *Project) walkHandler(path string, info os.FileInfo, err error) error {
 		return nil
 	}
 
-	if strings.HasPrefix(path, p.TemplatePath+"/.git") {
+	if info.IsDir() && path == p.TemplatePath+"/.git" {
 		log.Debugf("skipping the git directory: %s", path)
+		return nil
+	} else if strings.HasPrefix(path, p.TemplatePath+"/.git/") {
+		log.Debugf("skipping the git directory contents: %s", path)
 		return nil
 	}
 
