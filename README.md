@@ -4,7 +4,7 @@ Lays out the structure for a new Spinup API.
 
 ---
 [![goreleaser](https://github.com/YaleSpinup/splat/actions/workflows/releaser.yml/badge.svg)](https://github.com/YaleSpinup/splat/actions/workflows/releaser.yml)
-[![tests](https://github.com/YaleSpinup/splat/actions/workflows/test.yaml/badge.svg)](https://github.com/YaleSpinup/splat/actions/workflows/test.yaml)
+[![tests](https://github.com/YaleSpinup/splat/actions/workflows/tests.yaml/badge.svg)](https://github.com/YaleSpinup/splat/actions/workflows/tests.yaml)
 ## Install
 
 ## Install Using Homebrew
