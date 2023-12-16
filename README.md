@@ -2,6 +2,9 @@
 
 Lays out the structure for a new Spinup API.
 
+---
+[![goreleaser](https://github.com/YaleSpinup/splat/actions/workflows/releaser.yml/badge.svg)](https://github.com/YaleSpinup/splat/actions/workflows/releaser.yml)
+[![tests](https://github.com/YaleSpinup/splat/actions/workflows/test.yaml/badge.svg)](https://github.com/YaleSpinup/splat/actions/workflows/test.yaml)
 ## Install
 
 ## Install Using Homebrew
@@ -45,7 +48,8 @@ Initialize a new API from a repository in Github.  `Splat` works off of releases
 
 ## Author
 
-E Camden Fisher <camden.fisher@yale.edu>
+* E Camden Fisher <camden.fisher@yale.edu>
+* Brandon Tassone <brandon.tassone@yale.edu>
 
 ## License
 
