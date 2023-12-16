@@ -45,7 +45,8 @@ Initialize a new API from a repository in Github.  `Splat` works off of releases
 
 ## Author
 
-E Camden Fisher <camden.fisher@yale.edu>
+* E Camden Fisher <camden.fisher@yale.edu>
+* Brandon Tassone <brandon.tassone@yale.edu>
 
 ## License
 

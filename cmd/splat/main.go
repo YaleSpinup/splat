@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 package main
 
-import "github.com/YaleSpinup/splat/cmd"
+import "github.com/YaleSpinup/splat/cli"
 
 var (
 	version = "v0.0.0"
@@ -25,11 +25,11 @@ var (
 )
 
 func main() {
-	cmd.Version = &cmd.CmdVersion{
+	cli.Version = &cli.CmdVersion{
 		AppVersion: version,
 		BuildTime:  date,
 		GitCommit:  commit,
 	}
 
-	cmd.Execute()
+	cli.Execute()
 }
